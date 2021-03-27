@@ -30,7 +30,7 @@ CREATE TABLE Subject_Schedule(
 	date_from DATE NOT NULL,
 	date_to DATE NOT NULL,
 	description VARCHAR(500) NOT NULL,
-	subject_id SERIAL REFERENCES Subject(subject_id)
+	subject_id SERIAL REFERENCES Subject(subject_id),
 	UNIQUE (schedule_name, subject_id)
 );
 
