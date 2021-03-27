@@ -9,7 +9,9 @@ if (process.env.SSL_ENABLE) {
   console.log("production MODE running");
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: true,
+    ssl: {
+      rejectUnauthorized: false,
+    },
   });
 } else {
   // dev mode
