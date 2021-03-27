@@ -4,7 +4,7 @@
   "description": "Backend part",
   "main": "src/app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node ./src/app.js",
     "create-db": "psql -U postgres < ./database/schema.sql",
     "seed": "psql -U postgres < ./database/seed.sql"
   },
