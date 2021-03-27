@@ -34,81 +34,96 @@ app.use(express.json());
 
 // ROUTES ==========================================================================
 // subjects
-app.get("/subject-exists/:subjectName", subjectController.isSubjectExisting);
-app.get("/subjects", subjectController.getAllSubjects);
-app.get("/subjects/:subjectName", subjectController.getOneSubject);
+app.get(
+  "/api/subject-exists/:subjectName",
+  subjectController.isSubjectExisting
+);
+app.get("/api/subjects", subjectController.getAllSubjects);
+app.get("/api/subjects/:subjectName", subjectController.getOneSubject);
 
 // home
-app.get("/home/description/:subjectName", homeController.getHomeDescription);
-app.get("/home/schedule/:subjectName", homeController.getHomeSchedule);
+app.get(
+  "/api/home/description/:subjectName",
+  homeController.getHomeDescription
+);
+app.get("/api/home/schedule/:subjectName", homeController.getHomeSchedule);
 
 // proposal
-app.post("/proposal/new-project", proposalController.saveNewProject);
+app.post("/api/proposal/new-project", proposalController.saveNewProject);
 
 // voting
-app.post("/vote-projects", voteProjectController.getAllVoteProjects);
-app.post("/vote/project", voteProjectController.voteForProject);
-app.post("/vote/check", voteProjectController.checkVotesLimit);
+app.post("/api/vote-projects", voteProjectController.getAllVoteProjects);
+app.post("/api/vote/project", voteProjectController.voteForProject);
+app.post("/api/vote/check", voteProjectController.checkVotesLimit);
 
 // result
-app.post("/result-projects", resultProjectController.getAllResultProjects);
+app.post("/api/result-projects", resultProjectController.getAllResultProjects);
 
 // schedule
-app.get("/schedule/:subjectName", scheduleController.getScheduleOfSubject);
+app.get("/api/schedule/:subjectName", scheduleController.getScheduleOfSubject);
 
 // history
-app.post("/history-projects", historyController.getAllHistoryProjects);
+app.post("/api/history-projects", historyController.getAllHistoryProjects);
 
 // contact
-app.get("/contact/:subjectName", contactController.getContactInformation);
-app.post("/contact/send-email", contactController.sendEmail);
+app.get("/api/contact/:subjectName", contactController.getContactInformation);
+app.post("/api/contact/send-email", contactController.sendEmail);
 
 // detail
-app.get("/detail-project/:projectId", detailProjectController.getProjectDetail);
 app.get(
-  "/detail-project/photo/:projectId",
+  "/api/detail-project/:projectId",
+  detailProjectController.getProjectDetail
+);
+app.get(
+  "/api/detail-project/photo/:projectId",
   detailProjectController.getProjectPhoto
 );
 app.get(
-  "/detail-project/expenses/:projectId",
+  "/api/detail-project/expenses/:projectId",
   detailProjectController.getProjectExpenses
 );
 app.post(
-  "/detail-project/decide",
+  "/api/detail-project/decide",
   detailProjectController.updateDecisionOfProject
 );
 
 // admin section
 // decision
 app.get(
-  "/admin/decision/:subjectName",
+  "/api/admin/decision/:subjectName",
   adminDecisionController.getDecisionProjects
 );
 // change-schedule
 app.get(
-  "/admin/schedule/:subjectName",
+  "/api/admin/schedule/:subjectName",
   adminChangeScheduleController.getAllSchedules
 );
-app.put("/admin/schedule/update", adminChangeScheduleController.updateSchedule);
+app.put(
+  "/api/admin/schedule/update",
+  adminChangeScheduleController.updateSchedule
+);
 app.post(
-  "/admin/schedule/create",
+  "/api/admin/schedule/create",
   adminChangeScheduleController.createSchedule
 );
 app.delete(
-  "/admin/schedule/delete/:scheduleId",
+  "/api/admin/schedule/delete/:scheduleId",
   adminChangeScheduleController.deleteSchedule
 );
 // polygon
-app.get("/admin/polygon/:subjectName", adminPolygonController.getPolygon);
-app.put("/admin/polygon/update", adminPolygonController.updatePolygon);
+app.get("/api/admin/polygon/:subjectName", adminPolygonController.getPolygon);
+app.put("/api/admin/polygon/update", adminPolygonController.updatePolygon);
 // settings
-app.get("/admin/settings/:subjectName", adminSettingsController.getSettings);
-app.put("/admin/settings/update", adminSettingsController.updateSettings);
-app.put("/admin/settings/photo", adminSettingsController.updatePhoto);
+app.get(
+  "/api/admin/settings/:subjectName",
+  adminSettingsController.getSettings
+);
+app.put("/api/admin/settings/update", adminSettingsController.updateSettings);
+app.put("/api/admin/settings/photo", adminSettingsController.updatePhoto);
 
 // shared
 app.get(
-  "/shared/historic-years/:subjectName",
+  "/api/shared/historic-years/:subjectName",
   sharedController.getDistinctHistoricYears
 );
 

@@ -26,7 +26,6 @@ module.exports = {
    */
   getAllSubjects: async (_, res) => {
     try {
-      console.log("testing of getAllSubjects");
       const subjects = await pool.query("SELECT * FROM Subject");
 
       res.json(subjects.rows);

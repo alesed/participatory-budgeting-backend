@@ -6,7 +6,6 @@ let pool;
 
 if (process.env.SSL_ENABLE) {
   // production mode
-  console.log("production MODE running");
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
@@ -15,7 +14,6 @@ if (process.env.SSL_ENABLE) {
   });
 } else {
   // dev mode
-  console.log("dev MODE running");
   pool = new Pool({
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
