@@ -50,10 +50,10 @@ VALUES('{
 }',1);
 
 -- PROJECT
-INSERT INTO Project(project_name, author, author_email, date_created, category, description, geo_latitude, geo_longtitude, subject_id)
-VALUES('Workoutové hřiště', 'Aleš Sedláček', 'ales.sedlacek@mail.com', NOW(), 'Sport', 'Uvítal bych nové workoutové hřiště vedle obchodu Kaufland.', 49.819792289954215, 18.189444568389817, 1);
-INSERT INTO Project(project_name, author, author_email, date_created, category, description, geo_latitude, geo_longtitude, subject_id)
-VALUES('Lavičky', 'Aleš Sedláček', 'ales.sedlacek@mail.com', NOW(), 'Jine', 'Uvítal bych lavičky vedle obchodu Kaufland.', 49.819792289954215, 18.189444568389817, 1);
+-- INSERT INTO Project(project_name, author, author_email, date_created, category, description, geo_latitude, geo_longtitude, subject_id)
+-- VALUES('Workoutové hřiště', 'Aleš Sedláček', 'ales.sedlacek@mail.com', NOW(), 'Sport', 'Uvítal bych nové workoutové hřiště vedle obchodu Kaufland.', 49.819792289954215, 18.189444568389817, 1);
+-- INSERT INTO Project(project_name, author, author_email, date_created, category, description, geo_latitude, geo_longtitude, subject_id)
+-- VALUES('Lavičky', 'Aleš Sedláček', 'ales.sedlacek@mail.com', NOW(), 'Jine', 'Uvítal bych lavičky vedle obchodu Kaufland.', 49.819792289954215, 18.189444568389817, 1);
 -- old
 INSERT INTO Project(project_name, author, author_email, date_created, category, description, geo_latitude, geo_longtitude, subject_id)
 VALUES('Workoutové hřiště OLD1', 'Aleš Sedláček', 'ales.sedlacek@mail.com', '2020-03-05', 'Sport', 'Uvítal bych nové workoutové hřiště vedle obchodu Kaufland.', 49.819792289954215, 18.189444568389817, 1);
@@ -61,34 +61,34 @@ INSERT INTO Project(project_name, author, author_email, date_created, category, 
 VALUES('Workoutové hřiště OLD2', 'Aleš Sedláček', 'ales.sedlacek@mail.com', '2019-03-05', 'Sport', 'Uvítal bych nové workoutové hřiště vedle obchodu Kaufland.', 49.819792289954215, 18.189444568389817, 1);
 
 -- PROJECT_PHOTO
-INSERT INTO Project_Photo(photo_name, photo_path, project_id)
-VALUES('dummy_photo_w.png', 'firebase/path/dummy_photo_w.png', 1);
-INSERT INTO Project_Photo(photo_name, photo_path, project_id)
-VALUES('dummy_photo_l.png', 'firebase/path/dummy_photo_l.png', 2);
+-- INSERT INTO Project_Photo(photo_name, photo_path, project_id)
+-- VALUES('dummy_photo_w.png', 'firebase/path/dummy_photo_w.png', 1);
+-- INSERT INTO Project_Photo(photo_name, photo_path, project_id)
+-- VALUES('dummy_photo_l.png', 'firebase/path/dummy_photo_l.png', 2);
 
 -- PROJECT_EXPENSES
-INSERT INTO Project_Expenses(expense_name, expense_cost, project_id)
-VALUES('tyčinky', 42000, 1);
-INSERT INTO Project_Expenses(expense_name, expense_cost, project_id)
-VALUES('hrazdy', 54500, 1);
-INSERT INTO Project_Expenses(expense_name, expense_cost, project_id)
-VALUES('lavičky', 8500, 2);
+-- INSERT INTO Project_Expenses(expense_name, expense_cost, project_id)
+-- VALUES('tyčinky', 42000, 1);
+-- INSERT INTO Project_Expenses(expense_name, expense_cost, project_id)
+-- VALUES('hrazdy', 54500, 1);
+-- INSERT INTO Project_Expenses(expense_name, expense_cost, project_id)
+-- VALUES('lavičky', 8500, 2);
 
 -- VOTER
 INSERT INTO Voter(voter_hash, date_created, subject_id)
 VALUES('0b72491fd59c16ba2023b8b5d795a2c5059c70b6', NOW(), 1);
 
 -- VOTE
-INSERT INTO Vote(date_voted, voter_hash, project_id)
-VALUES(NOW(), '0b72491fd59c16ba2023b8b5d795a2c5059c70b6', 1);
+-- INSERT INTO Vote(date_voted, voter_hash, project_id)
+-- VALUES(NOW(), '0b72491fd59c16ba2023b8b5d795a2c5059c70b6', 1);
+-- INSERT INTO Vote(date_voted, voter_hash, project_id)
+-- VALUES(NOW(), '0b72491fd59c16ba2023b8b5d795a2c5059c70b6', 1);
+-- INSERT INTO Vote(date_voted, voter_hash, project_id)
+-- VALUES(NOW(), '0b72491fd59c16ba2023b8b5d795a2c5059c70b6', 2);
+-- old
 INSERT INTO Vote(date_voted, voter_hash, project_id)
 VALUES(NOW(), '0b72491fd59c16ba2023b8b5d795a2c5059c70b6', 1);
 INSERT INTO Vote(date_voted, voter_hash, project_id)
 VALUES(NOW(), '0b72491fd59c16ba2023b8b5d795a2c5059c70b6', 2);
--- old
-INSERT INTO Vote(date_voted, voter_hash, project_id)
-VALUES(NOW(), '0b72491fd59c16ba2023b8b5d795a2c5059c70b6', 3);
-INSERT INTO Vote(date_voted, voter_hash, project_id)
-VALUES(NOW(), '0b72491fd59c16ba2023b8b5d795a2c5059c70b6', 4);
 
 

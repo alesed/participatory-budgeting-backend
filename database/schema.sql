@@ -26,7 +26,7 @@ CREATE TABLE Subject(
 
 CREATE TABLE Subject_Schedule(
     schedule_id SERIAL PRIMARY KEY,
-	schedule_name VARCHAR(50),
+	schedule_name VARCHAR(100),
 	date_from DATE NOT NULL,
 	date_to DATE NOT NULL,
 	description VARCHAR(500) NOT NULL,
@@ -58,14 +58,14 @@ CREATE TABLE Project(
 
 CREATE TABLE Project_Expenses(
     expense_id SERIAL PRIMARY KEY,
-	expense_name VARCHAR(50) NOT NULL,
+	expense_name VARCHAR(150) NOT NULL,
 	expense_cost DOUBLE PRECISION NOT NULL,
 	project_id SERIAL REFERENCES Project(project_id)
 );
 
 CREATE TABLE Project_Photo(
     photo_id SERIAL PRIMARY KEY,
-	photo_name VARCHAR(50),
+	photo_name VARCHAR(300),
 	photo_path VARCHAR(500) NOT NULL,
 	project_id SERIAL REFERENCES Project(project_id)
 );
