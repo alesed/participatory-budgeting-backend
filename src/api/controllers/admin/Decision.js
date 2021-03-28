@@ -10,12 +10,15 @@ module.exports = {
   getDecisionProjects: async (req, res) => {
     try {
       const { subjectName } = req.params;
+      const currentYear = utils.getCurrentYear();
+
       let decisionProjects = await pool.query(
         "SELECT project_id, project_name, decision " +
           "FROM Project " +
           "INNER JOIN Subject USING(subject_id) " +
-          "WHERE subject_name = $1",
-        [subjectName]
+          "WHERE subject_name = $1 " +
+          "AND EXTRACT(year FROM date_created) = $2",
+        [subjectName, currentYear]
       );
       if (decisionProjects.rowCount > 0) {
         decisionProjects = utils.convertProjectDecisionData(decisionProjects);
