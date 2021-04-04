@@ -86,6 +86,10 @@ app.post(
   "/api/detail-project/decide",
   detailProjectController.updateDecisionOfProject
 );
+app.post(
+  "/api/detail-project/update",
+  detailProjectController.createTemporaryProject
+);
 
 // admin section
 // decision

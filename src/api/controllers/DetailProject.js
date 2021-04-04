@@ -1,5 +1,6 @@
 const pool = require("../../config/db");
 const utils = require("../helpers/Utils");
+const crypto = require("crypto");
 
 module.exports = {
   /**
@@ -78,6 +79,39 @@ module.exports = {
           decisionData.projectId,
         ]
       );
+
+      return res.send({ success: true });
+    } catch (err) {
+      console.error(err.message);
+    }
+  },
+  /**
+   * Create temporary project and send acceptation email to author
+   * @returns {success}
+   */
+  createTemporaryProject: async (req, res) => {
+    try {
+      const projectInput = req.body;
+
+      const subjectName = projectInput.subjectName;
+      const projectData = projectInput.projectData;
+      const projectExpenses = projectInput.projectExpenses;
+
+      const projectHash = crypto
+        .createHash("sha1")
+        .update(subjectName + projectData.project_id)
+        .digest("hex");
+
+      const acceptationURL =
+        req.protocol +
+        "://" +
+        req.get("host") +
+        "/change-project/" +
+        projectHash +
+        "/" +
+        projectData.project_id;
+
+      console.log(acceptationURL);
 
       return res.send({ success: true });
     } catch (err) {
