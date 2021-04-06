@@ -1,5 +1,6 @@
 const pool = require("../../config/db");
 const utils = require("../helpers/Utils");
+const subjectController = require("../controllers/Subject");
 const crypto = require("crypto");
 
 module.exports = {
@@ -86,10 +87,10 @@ module.exports = {
     }
   },
   /**
-   * Create temporary project and send acceptation email to author
+   * Send email with reference to new project
    * @returns {success}
    */
-  createTemporaryProject: async (req, res) => {
+  doChangeRequest: async (req, res) => {
     try {
       const projectInput = req.body;
 
@@ -111,11 +112,74 @@ module.exports = {
         "/" +
         projectData.project_id;
 
-      console.log(acceptationURL);
+      const result = await _createTemporaryProject(
+        subjectName,
+        projectData,
+        projectExpenses
+      );
 
-      return res.send({ success: true });
+      if (result === true) {
+        // send EMAIL TODO:
+        return res.send({ success: true });
+      }
+      return res.send({ success: false });
     } catch (err) {
-      console.error(err.message);
+      return res.send({ success: false });
     }
   },
 };
+
+/**
+ * Create temporary project which is a reference to real project
+ */
+async function _createTemporaryProject(
+  subjectName,
+  projectData,
+  projectExpenses
+) {
+  let result;
+  try {
+    await subjectController
+      .getSubjectId(subjectName)
+      .then(async (value) => {
+        subjectId = value;
+        createdProject = await pool.query(
+          "INSERT INTO Project(project_id, project_name, author, author_email, date_created, category, description, geo_latitude, geo_longtitude, subject_id) " +
+            "VALUES($1, $2, $3, $4, NOW(), $5, $6, $7, $8, $9) " +
+            "RETURNING project_id",
+          [
+            projectData.project_id + 1000000,
+            projectData.project_name + "_temp",
+            projectData.author,
+            projectData.author_email,
+            projectData.category,
+            projectData.description,
+            projectData.geo_latitude,
+            projectData.geo_longtitude,
+            subjectId,
+          ]
+        );
+
+        projectExpenses.forEach(async (element) => {
+          await pool.query(
+            "INSERT INTO Project_Expenses(expense_name, expense_cost, project_id) " +
+              "VALUES($1, $2, $3)",
+            [
+              element.expense_name,
+              element.expense_cost,
+              createdProject.rows[0].project_id,
+            ]
+          );
+        });
+
+        result = true;
+      })
+      .catch(() => {
+        result = false;
+        return;
+      });
+  } catch (err) {
+    return result;
+  }
+  return result;
+}

@@ -24,7 +24,7 @@ module.exports = {
             "FROM Project " +
             "INNER JOIN Subject USING (subject_id) " +
             "INNER JOIN Project_Photo USING (project_id) " +
-            "WHERE subject_name = $1 AND category = ANY ($2) " +
+            "WHERE subject_name = $1 AND category = ANY ($2) AND project_id < 1000000 " +
             "AND EXTRACT(year FROM date_created) = $3 " +
             "ORDER BY decision DESC NULLS LAST",
           [subjectName, category, currentYear]
@@ -36,7 +36,7 @@ module.exports = {
             "INNER JOIN Subject USING (subject_id) " +
             "INNER JOIN Project_Photo USING (project_id) " +
             "WHERE subject_name = $1 " +
-            "AND EXTRACT(year FROM date_created) = $2 " +
+            "AND EXTRACT(year FROM date_created) = $2  AND project_id < 1000000 " +
             "ORDER BY decision DESC NULLS LAST",
           [subjectName, currentYear]
         );

@@ -22,7 +22,7 @@ module.exports = {
             "INNER JOIN Subject USING (subject_id) " +
             "INNER JOIN Vote USING (project_id) " +
             "WHERE subject_name = $1 AND category = ANY ($2) " +
-            "AND EXTRACT(year FROM date_created) = $3 " +
+            "AND EXTRACT(year FROM date_created) = $3 AND project_id < 1000000 " +
             "GROUP BY project_id",
           [subjectName, category, currentYear]
         );
@@ -33,7 +33,7 @@ module.exports = {
             "INNER JOIN Subject USING (subject_id) " +
             "INNER JOIN Vote USING (project_id) " +
             "WHERE subject_name = $1 " +
-            "AND EXTRACT(year FROM date_created) = $2 " +
+            "AND EXTRACT(year FROM date_created) = $2  AND project_id < 1000000 " +
             "GROUP BY project_id",
           [subjectName, currentYear]
         );

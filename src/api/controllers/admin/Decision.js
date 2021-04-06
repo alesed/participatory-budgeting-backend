@@ -17,7 +17,7 @@ module.exports = {
           "FROM Project " +
           "INNER JOIN Subject USING(subject_id) " +
           "WHERE subject_name = $1 " +
-          "AND EXTRACT(year FROM date_created) = $2",
+          "AND EXTRACT(year FROM date_created) = $2  AND project_id < 1000000",
         [subjectName, currentYear]
       );
       if (decisionProjects.rowCount > 0) {
