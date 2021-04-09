@@ -1,6 +1,9 @@
 const pool = require("../../config/db");
 const utils = require("../helpers/Utils");
+const nodemailer = require("nodemailer");
+
 const subjectController = require("../controllers/Subject");
+
 const crypto = require("crypto");
 
 module.exports = {
@@ -98,6 +101,8 @@ module.exports = {
       const projectData = projectInput.projectData;
       const projectExpenses = projectInput.projectExpenses;
 
+      console.log(projectData);
+
       const projectHash = crypto
         .createHash("sha1")
         .update(subjectName + projectData.project_id)
@@ -112,15 +117,37 @@ module.exports = {
         "/" +
         projectData.project_id;
 
-      const result = await _createTemporaryProject(
+      const projectSuccess = await _createTemporaryProject(
         subjectName,
         projectData,
         projectExpenses
       );
 
-      if (result === true) {
-        // send EMAIL TODO:
-        return res.send({ success: true });
+      if (projectSuccess === true) {
+        const oldProjectData = await pool.query(
+          "SELECT * FROM Project WHERE project_id = $1",
+          [projectData.project_id]
+        );
+        const oldProjectExpenses = await pool.query(
+          "SELECT * FROM Project_Expenses WHERE project_id = $1",
+          [projectData.project_id]
+        );
+
+        console.log(oldProjectExpenses);
+        console.log(oldProjectExpenses.rows);
+
+        const emailSuccess = await _sendAcceptationEmailToAuthor(
+          acceptationURL,
+          projectData,
+          projectExpenses,
+          subjectName,
+          oldProjectData.rows[0],
+          oldProjectExpenses.rows
+        );
+
+        if (emailSuccess === true) {
+          return res.send({ success: true });
+        }
       }
       return res.send({ success: false });
     } catch (err) {
@@ -131,6 +158,10 @@ module.exports = {
 
 /**
  * Create temporary project which is a reference to real project
+ * @param {string} acceptationURL
+ * @param {ProjectData model} projectData
+ * @param {string} subjectName
+ * @returns {success}
  */
 async function _createTemporaryProject(
   subjectName,
@@ -182,4 +213,86 @@ async function _createTemporaryProject(
     return result;
   }
   return result;
+}
+
+/**
+ * Send email to author with proposed changes to be made and confirmation email link
+ * @param {string} acceptationURL
+ * @param {ProjectData model} projectData
+ * @param {ProjectExpenses model} projectExpenses
+ * @param {string} subjectName
+ * @param {ProjectData model} oldProjectData
+ * @param {ProjectExpenses model} oldProjectExpenses
+ * @returns {success}
+ */
+async function _sendAcceptationEmailToAuthor(
+  acceptationURL,
+  projectData,
+  projectExpenses,
+  subjectName,
+  oldProjectData,
+  oldProjectExpenses
+) {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: process.env.EMAIL_SERVICE,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    var emailOptions = {
+      from: `"Participativní rozpočet" <${process.env.EMAIL_USER}>`,
+      to: projectData.author_email,
+      subject: `Změna projektu - ${subjectName}`,
+      html: _getEmailTemplate(
+        acceptationURL,
+        projectData,
+        projectExpenses,
+        oldProjectData,
+        oldProjectExpenses
+      ),
+    };
+
+    await transporter.sendMail(emailOptions);
+
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+/**
+ * Create template of expenses including every element per line
+ * @param {string} acceptationURL
+ * @param {ProjectData model} projectData
+ * @param {ProjectExpenses model} projectExpenses
+ * @param {string} subjectName
+ * @param {ProjectData model} oldProjectData
+ * @param {ProjectExpenses model} oldProjectExpenses
+ * @returns {string}
+ */
+function _getEmailTemplate(
+  acceptationURL,
+  projectData,
+  projectExpenses,
+  oldProjectData,
+  oldProjectExpenses
+) {
+  let expensesTemplate = "";
+  projectExpenses.forEach((element, index) => {
+    expensesTemplate += `<p><strong>Název:</strong> ${oldProjectExpenses[index].expense_name} -> <strong>${element.expense_name}</strong>, <strong>Cena:</strong> ${oldProjectExpenses[index].expense_cost} kč -> <strong>${element.expense_cost} kč</strong></p>`;
+  });
+
+  return (
+    `<h1>Prováděné změny:</h1> ` +
+    `<p>(* tučně zvýrazněné jsou nové změny)</p> ` +
+    `<h3>Název:</h3><p>${oldProjectData.project_name} -> <strong>${projectData.project_name}</strong></p>` +
+    `<h3>Autor:</h3><p>${oldProjectData.author} -> <strong>${projectData.author}</strong></p>` +
+    `<h3>Popis:</h3><p>${oldProjectData.description} -> <strong>${projectData.description}</strong></p>` +
+    `</br>` +
+    `<h3>Náklady:</h3><p>${expensesTemplate}</p>` +
+    `</br></br>Akceptovat kliknutím na odkaz: ${acceptationURL}`
+  );
 }
