@@ -43,7 +43,7 @@ CREATE TABLE Subject_Polygon(
 -- PROJECT ======================================================
 CREATE TABLE Project(
     project_id SERIAL PRIMARY KEY,
-    project_name VARCHAR(150) NOT NULL UNIQUE,
+    project_name VARCHAR(150) NOT NULL,
 	author VARCHAR(150) NOT NULL,
 	author_email VARCHAR(100) NOT NULL,
 	date_created DATE NOT NULL,

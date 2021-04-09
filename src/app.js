@@ -16,6 +16,7 @@ const adminDecisionController = require("./api/controllers/admin/Decision");
 const adminChangeScheduleController = require("./api/controllers/admin/ChangeSchedule");
 const adminPolygonController = require("./api/controllers/admin/Polygon");
 const adminSettingsController = require("./api/controllers/admin/Settings");
+const changeProjectController = require("./api/controllers/ChangeProject");
 
 const sharedController = require("./api/controllers/Shared");
 
@@ -121,6 +122,12 @@ app.get(
 );
 app.put("/api/admin/settings/update", adminSettingsController.updateSettings);
 app.put("/api/admin/settings/photo", adminSettingsController.updatePhoto);
+
+// change-project
+app.post(
+  "/api/change-project",
+  changeProjectController.updatePendingProjectChange
+);
 
 // shared
 app.get(

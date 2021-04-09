@@ -98,6 +98,8 @@ module.exports = {
       const projectInput = req.body;
 
       const subjectName = projectInput.subjectName;
+      const baseUrl = projectInput.baseUrl;
+
       const projectData = projectInput.projectData;
       const projectExpenses = projectInput.projectExpenses;
 
@@ -109,9 +111,7 @@ module.exports = {
         .digest("hex");
 
       const acceptationURL =
-        req.protocol +
-        "://" +
-        req.get("host") +
+        baseUrl +
         "/change-project/" +
         projectHash +
         "/" +
@@ -180,7 +180,7 @@ async function _createTemporaryProject(
             "RETURNING project_id",
           [
             projectData.project_id + 1000000,
-            projectData.project_name + "_temp",
+            projectData.project_name,
             projectData.author,
             projectData.author_email,
             projectData.category,
