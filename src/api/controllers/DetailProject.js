@@ -293,6 +293,6 @@ function _getEmailTemplate(
     `<h3>Popis:</h3><p>${oldProjectData.description} -> <strong>${projectData.description}</strong></p>` +
     `</br>` +
     `<h3>Náklady:</h3><p>${expensesTemplate}</p>` +
-    `</br></br>Akceptovat kliknutím na odkaz: ${acceptationURL}`
+    `</br></br></br>Akceptovat kliknutím na odkaz: ${acceptationURL}`
   );
 }
