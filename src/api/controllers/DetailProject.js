@@ -103,8 +103,6 @@ module.exports = {
       const projectData = projectInput.projectData;
       const projectExpenses = projectInput.projectExpenses;
 
-      console.log(projectData);
-
       const projectHash = crypto
         .createHash("sha1")
         .update(subjectName + projectData.project_id)
@@ -132,9 +130,6 @@ module.exports = {
           "SELECT * FROM Project_Expenses WHERE project_id = $1",
           [projectData.project_id]
         );
-
-        console.log(oldProjectExpenses);
-        console.log(oldProjectExpenses.rows);
 
         const emailSuccess = await _sendAcceptationEmailToAuthor(
           acceptationURL,

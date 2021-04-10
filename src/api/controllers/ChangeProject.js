@@ -138,7 +138,6 @@ async function _updateOldProjectWithTemporaryProject(oldProject, newProject) {
  * @returns {success}
  */
 async function _deleteTemporaryProject(temporaryProject) {
-  console.log(temporaryProject);
   try {
     // expenses
     await pool.query("DELETE FROM Project_Expenses WHERE project_id = $1", [
