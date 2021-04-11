@@ -53,6 +53,7 @@ CREATE TABLE Project(
 	geo_longtitude DOUBLE PRECISION NOT NULL,
 	decision BIT,
 	decision_text VARCHAR(250),
+	is_changed BIT,
 	subject_id SERIAL REFERENCES Subject(subject_id)
 );
 

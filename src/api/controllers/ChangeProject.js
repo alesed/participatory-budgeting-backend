@@ -42,6 +42,11 @@ module.exports = {
 
       if (deleteResult === false) return res.send({ success: false });
 
+      await pool.query(
+        "UPDATE Project SET is_changed = 1::bit WHERE project_id = $1",
+        [projectInput.projectId]
+      );
+
       return res.send({ success: true });
     } catch (err) {
       console.error(err);

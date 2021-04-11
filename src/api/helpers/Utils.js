@@ -37,4 +37,17 @@ module.exports = {
 
     return [year, month, day].join("-");
   },
+  /**
+   * Convert data (is_changed cast from string(/null) to boolean)
+   * @param {RawProjectData} data
+   * @returns {ConvertedProjectData}
+   */
+  convertProjectIsChangedData: (data) => {
+    data.rows.forEach((element) => {
+      element.is_changed = element.is_changed
+        ? !!parseInt(element.is_changed)
+        : null;
+    });
+    return data;
+  },
 };

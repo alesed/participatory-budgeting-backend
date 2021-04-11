@@ -16,13 +16,14 @@ module.exports = {
     try {
       const { projectId } = req.params;
       let subject = await pool.query(
-        "SELECT project_id, project_name, author, author_email, date_created, category, description, geo_latitude, geo_longtitude, decision, decision_text " +
+        "SELECT project_id, project_name, author, author_email, date_created, category, description, geo_latitude, geo_longtitude, decision, decision_text, is_changed " +
           "FROM Project " +
           "WHERE project_id = $1",
         [parseInt(projectId)]
       );
       if (subject.rowCount > 0) {
         subject = utils.convertProjectDecisionData(subject);
+        subject = utils.convertProjectIsChangedData(subject);
         res.json(subject.rows[0]);
       } else res.json(null);
     } catch (err) {
@@ -146,6 +147,7 @@ module.exports = {
       }
       return res.send({ success: false });
     } catch (err) {
+      console.log(err);
       return res.send({ success: false });
     }
   },
@@ -186,25 +188,34 @@ async function _createTemporaryProject(
           ]
         );
 
-        projectExpenses.forEach(async (element) => {
-          await pool.query(
-            "INSERT INTO Project_Expenses(expense_name, expense_cost, project_id) " +
-              "VALUES($1, $2, $3)",
-            [
-              element.expense_name,
-              element.expense_cost,
-              createdProject.rows[0].project_id,
-            ]
-          );
-        });
+        if (projectExpenses && projectExpenses.length > 0) {
+          projectExpenses.forEach(async (element) => {
+            await pool.query(
+              "INSERT INTO Project_Expenses(expense_name, expense_cost, project_id) " +
+                "VALUES($1, $2, $3)",
+              [
+                element.expense_name,
+                element.expense_cost,
+                createdProject.rows[0].project_id,
+              ]
+            );
+          });
+        }
+
+        await pool.query(
+          "UPDATE Project SET is_changed = 0::bit WHERE project_id = $1",
+          [projectData.project_id]
+        );
 
         result = true;
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         result = false;
         return;
       });
   } catch (err) {
+    console.log(err);
     return result;
   }
   return result;
@@ -254,6 +265,7 @@ async function _sendAcceptationEmailToAuthor(
 
     return true;
   } catch (err) {
+    console.log(err);
     return false;
   }
 }
@@ -275,10 +287,13 @@ function _getEmailTemplate(
   oldProjectData,
   oldProjectExpenses
 ) {
-  let expensesTemplate = "";
-  projectExpenses.forEach((element, index) => {
-    expensesTemplate += `<p><strong>Název:</strong> ${oldProjectExpenses[index].expense_name} -> <strong>${element.expense_name}</strong>, <strong>Cena:</strong> ${oldProjectExpenses[index].expense_cost} kč -> <strong>${element.expense_cost} kč</strong></p>`;
-  });
+  let expensesTemplate = "<p>náklady nezadány</p>";
+  if (projectExpenses && projectExpenses.length > 0) {
+    expensesTemplate = "";
+    projectExpenses.forEach((element, index) => {
+      expensesTemplate += `<p><strong>Název:</strong> ${oldProjectExpenses[index].expense_name} -> <strong>${element.expense_name}</strong>, <strong>Cena:</strong> ${oldProjectExpenses[index].expense_cost} kč -> <strong>${element.expense_cost} kč</strong></p>`;
+    });
+  }
 
   return (
     `<h1>Prováděné změny:</h1> ` +
