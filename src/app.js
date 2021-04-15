@@ -2,6 +2,8 @@
 require("dotenv").config();
 
 // CONTROLLERS =====================================================================
+const landingController = require("./api/controllers/Landing");
+
 const subjectController = require("./api/controllers/Subject");
 const homeController = require("./api/controllers/Home");
 const proposalController = require("./api/controllers/Proposal");
@@ -34,6 +36,12 @@ app.use(cors());
 app.use(express.json());
 
 // ROUTES ==========================================================================
+// landing
+app.post(
+  "/api/landing/send-proposal-email",
+  landingController.sendProposalEmail
+);
+
 // subjects
 app.get(
   "/api/subject-exists/:subjectName",
