@@ -41,6 +41,7 @@ app.post(
   "/api/landing/send-proposal-email",
   landingController.sendProposalEmail
 );
+app.post("/api/landing/send-contact-email", landingController.sendContactEmail);
 
 // subjects
 app.get(

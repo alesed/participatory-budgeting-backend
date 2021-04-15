@@ -10,8 +10,6 @@ module.exports = {
     try {
       const proposalInput = req.body;
 
-      console.log(proposalInput);
-
       const transporter = nodemailer.createTransport({
         service: process.env.EMAIL_SERVICE,
         auth: {
@@ -44,8 +42,6 @@ module.exports = {
     try {
       const contactInput = req.body;
 
-      console.log(contactInput);
-
       const transporter = nodemailer.createTransport({
         service: process.env.EMAIL_SERVICE,
         auth: {
@@ -55,10 +51,10 @@ module.exports = {
       });
 
       var emailOptions = {
-        from: `"Kontakt" <${contactInput.email}>`,
+        from: `"Participativní rozpočet" <${contactInput.email}>`,
         to: process.env.EMAIL_USER,
-        subject: "Žádost o nový participativní rozpočet",
-        html: `<h1>${contactInput.author}/h1><p>${contactInput.message}</p><br/><p><strong>Email:</strong> ${contactInput.email}</p><p><strong>Telefonní číslo:</strong> ${contactInput.phone}</p>`,
+        subject: `Kontakt - ${contactInput.author}`,
+        html: `<h1>Zpráva:</h1><p>${contactInput.message}</p><br/><p><strong>Email:</strong> ${contactInput.email}</p><p><strong>Telefonní číslo:</strong> ${contactInput.phone}</p>`,
       };
 
       await transporter.sendMail(emailOptions);
