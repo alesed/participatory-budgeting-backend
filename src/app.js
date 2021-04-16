@@ -1,5 +1,6 @@
 // CONFIG ==========================================================================
 require("dotenv").config();
+const firebaseAuth = require("./api/helpers/FirebaseAuth");
 
 // CONTROLLERS =====================================================================
 const landingController = require("./api/controllers/Landing");
@@ -22,13 +23,20 @@ const changeProjectController = require("./api/controllers/ChangeProject");
 
 const sharedController = require("./api/controllers/Shared");
 
+const serviceAccount = require("../serviceAccountKey.json");
+
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const admin = require("firebase-admin");
 
 const app = express();
 
 // MIDDLEWARE ======================================================================
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
@@ -94,43 +102,65 @@ app.get(
 );
 app.post(
   "/api/detail-project/decide",
+  firebaseAuth.verifyJWTToken,
   detailProjectController.updateDecisionOfProject
 );
-app.post("/api/detail-project/update", detailProjectController.doChangeRequest);
+app.post(
+  "/api/detail-project/update",
+  firebaseAuth.verifyJWTToken,
+  detailProjectController.doChangeRequest
+);
 
 // admin section
 // decision
 app.get(
   "/api/admin/decision/:subjectName",
+  firebaseAuth.verifyJWTToken,
   adminDecisionController.getDecisionProjects
 );
 // change-schedule
 app.get(
   "/api/admin/schedule/:subjectName",
+  firebaseAuth.verifyJWTToken,
   adminChangeScheduleController.getAllSchedules
 );
 app.put(
   "/api/admin/schedule/update",
+  firebaseAuth.verifyJWTToken,
   adminChangeScheduleController.updateSchedule
 );
 app.post(
   "/api/admin/schedule/create",
+  firebaseAuth.verifyJWTToken,
   adminChangeScheduleController.createSchedule
 );
 app.delete(
   "/api/admin/schedule/delete/:scheduleId",
+  firebaseAuth.verifyJWTToken,
   adminChangeScheduleController.deleteSchedule
 );
 // polygon
 app.get("/api/admin/polygon/:subjectName", adminPolygonController.getPolygon);
-app.put("/api/admin/polygon/update", adminPolygonController.updatePolygon);
+app.put(
+  "/api/admin/polygon/update",
+  firebaseAuth.verifyJWTToken,
+  adminPolygonController.updatePolygon
+);
 // settings
 app.get(
   "/api/admin/settings/:subjectName",
   adminSettingsController.getSettings
 );
-app.put("/api/admin/settings/update", adminSettingsController.updateSettings);
-app.put("/api/admin/settings/photo", adminSettingsController.updatePhoto);
+app.put(
+  "/api/admin/settings/update",
+  firebaseAuth.verifyJWTToken,
+  adminSettingsController.updateSettings
+);
+app.put(
+  "/api/admin/settings/photo",
+  firebaseAuth.verifyJWTToken,
+  adminSettingsController.updatePhoto
+);
 
 // change-project
 app.post(
